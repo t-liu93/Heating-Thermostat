@@ -10,6 +10,14 @@ static void callback(const char* topic, byte* payload, unsigned int length)
     Serial.print("\n");
     Serial.print((char*)payload);
     Serial.print("\n");
+    if (memcmp(payload, "on", 3) == 0)
+    {
+        digitalWrite(16, LOW);
+    }
+    else
+    {
+        digitalWrite(16, HIGH);
+    }
     memset(payload, 0, 4);
 }
 void setup()
@@ -21,6 +29,8 @@ void setup()
      */
     client.setServer("10.238.75.64", 1883);
     pinMode(LED_BUILTIN, OUTPUT);
+    pinMode(16, OUTPUT);
+    digitalWrite(16, HIGH);
     Serial.print("Connecting to broker..");
     bool result = client.connect("ESP8266 boiler", "mqtt", "mqtt");
     if (result)
