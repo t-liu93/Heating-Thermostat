@@ -2,8 +2,7 @@
 
 #define WIFI_SSID "Home"
 #define WIFI_PASSWORD "ireallydontknow"
-
-static_assert(WIFI_SSID, "Set WIFI defines for compiling");
+// set your own WIFI credentials
 
 void wifi_initialization()
 {
