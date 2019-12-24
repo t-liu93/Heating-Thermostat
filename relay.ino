@@ -27,7 +27,7 @@ static float byte_to_float(byte* bytes)
         if (i != dot_place)
         {
             int exp = (i < dot_place)? (dot_place - i - 1) : (dot_place - i);
-            dig = (value[i] - 48) * (powf(10, exp));
+            dig = (value[i] == 0)? (0) : ((value[i] - 48) * (powf(10, exp)));
             retval += dig;
         }
     }
@@ -41,19 +41,23 @@ static void callback(char* topic, byte* payload, unsigned int length)
     Serial.print("\n");
     Serial.print((char*)payload);
     Serial.print("\n");
-    if (memcmp(topic, "home/temperature", 16) == 0)
+    // if (memcmp(topic, "switch/boiler/state", 19) == 0)
+    // {
+    //     Serial.print("convert\n");
+    //     float temp = byte_to_float(payload);
+    //     Serial.print(temp);
+    // }
+    if (memcmp(payload, "on", 2) == 0)
     {
-        Serial.print("convert\n");
-        float temp = byte_to_float(payload);
-        Serial.print(temp);
-    }
-    if (memcmp(payload, "heat", 4) == 0)
-    {
-        digitalWrite(16, LOW);
+        digitalWrite(16, HIGH);
+        digitalWrite(LED_BUILTIN, LOW);
+        client.publish("switch/boiler/state", "on");
     }
     else
     {
-        digitalWrite(16, HIGH);
+        digitalWrite(16, LOW);
+        digitalWrite(LED_BUILTIN, HIGH);
+        client.publish("switch/boiler/state", "off");
     }
     memset(payload, 0, 16);
 }
@@ -64,10 +68,11 @@ void setup()
     /**
      * Following tests
      */
-    client.setServer("10.238.75.64", 1883);
+    client.setServer("10.238.75.62", 1883);
     pinMode(LED_BUILTIN, OUTPUT);
     pinMode(16, OUTPUT);
-    digitalWrite(16, HIGH);
+    digitalWrite(16, LOW);
+    digitalWrite(LED_BUILTIN, HIGH);
     Serial.print("Connecting to broker..");
     bool result = client.connect("ESP8266 boiler", "mqtt", "mqtt");
     if (result)
@@ -78,13 +83,9 @@ void setup()
     {
         Serial.print("Connection failed.\n");
     }
+    client.publish("switch/boiler/state", "off");
     Serial.print("Subscribing..");
-    result = client.subscribe("boiler/command");
-    client.subscribe("boiler/temperature_sp");
-    client.subscribe("boiler/temperature_low_sp");
-    client.subscribe("boiler/temperature_high_sp");
-    result = client.subscribe("home/temperature");
-    client.publish("boiler/available", "online");
+    result = client.subscribe("switch/boiler/command");
 
     if (result)
     {
