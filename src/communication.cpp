@@ -54,21 +54,21 @@ static void mqtt_cb(char* topic, byte* payload, unsigned int length)
 
 void wifi_initialization()
 {
-    Serial.begin(115200);
-    Serial.println();
+    // Serial.begin(115200);
+    // Serial.println();
 
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
-    Serial.print("Connecting");
+    // Serial.print("Connecting");
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(500);
-        Serial.print(".");
+        // Serial.print(".");
     }
     Serial.println();
 
-    Serial.print("Connected, IP address: ");
-    Serial.println(WiFi.localIP());
+    // Serial.print("Connected, IP address: ");
+    // Serial.println(WiFi.localIP());
 }
 
 bool wifi_is_connected()
@@ -80,29 +80,29 @@ void mqtt_initialization()
 {
     client.setServer(MQTT_BROKER_IP, MQTT_BROKER_PORT);
 
-    Serial.print("Connecting to broker..");
+    // Serial.print("Connecting to broker..");
 
     if (client.connect(MQTT_NAME, MQTT_UNAME, MQTT_PAS))
     {
-        Serial.print("Connection successful.\n");
+        // Serial.print("Connection successful.\n");
 
         client.publish(BOILER_MQTT_STATE_TOPIC, BOILER_MQTT_PAYLOAD_OFF);
-        Serial.print("Subscribing..");
+        // Serial.print("Subscribing..");
 
         if (client.subscribe(BOILER_MQTT_COMMAND_TOPIC))
         {
-            Serial.print("Subscribe successful.\n");
+            // Serial.print("Subscribe successful.\n");
             client.setCallback(mqtt_cb);
         }
         else
         {
-            Serial.print("Subscribing failed. \n");
+            // Serial.print("Subscribing failed. \n");
             restart_chip();
         }
     }
     else
     {
-        Serial.print("Connection failed.\n");
+        // Serial.print("Connection failed.\n");
         restart_chip();
     }
 }

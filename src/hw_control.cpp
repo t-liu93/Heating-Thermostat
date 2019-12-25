@@ -30,7 +30,7 @@ void pin_initialization()
 
 void restart_chip()
 {
-    Serial.print("Restarting...");
+    // Serial.print("Restarting...");
     ESP.restart();
 }
 
