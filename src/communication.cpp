@@ -2,6 +2,7 @@
 #include <PubSubClient.h>
 #include "communication.h"
 #include "hw_control.h"
+#include "helper.h"
 
 #define WIFI_SSID ("Home")
 #define WIFI_PASSWORD ("ireallydontknow")
@@ -28,12 +29,12 @@ static PubSubClient client(espClient);
 
 static void mqtt_cb(char* topic, byte* payload, unsigned int length)
 {
-    // Serial.print(topic);
-    // Serial.print("\n");
-    // Serial.print((char*)payload);
-    // Serial.print("\n");
-    // Serial.print(length);
-    // Serial.print("\n");
+    DEBUG_PRINT(topic);
+    DEBUG_PRINT("\n");
+    DEBUG_PRINT((char*)payload);
+    DEBUG_PRINT("\n");
+    DEBUG_PRINT(length);
+    DEBUG_PRINT("\n");
 
     if (boiler_mqtt_command_topic.equals(topic))
     {
@@ -54,21 +55,21 @@ static void mqtt_cb(char* topic, byte* payload, unsigned int length)
 
 void wifi_initialization()
 {
-    // Serial.begin(115200);
-    // Serial.println();
+    Serial.begin(115200);
+    DEBUG_PRINTLN();
 
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
 
-    // Serial.print("Connecting");
+    DEBUG_PRINT("Connecting");
     while (WiFi.status() != WL_CONNECTED)
     {
         delay(500);
-        // Serial.print(".");
+        DEBUG_PRINT(".");
     }
     Serial.println();
 
-    // Serial.print("Connected, IP address: ");
-    // Serial.println(WiFi.localIP());
+    DEBUG_PRINT("Connected, IP address: ");
+    DEBUG_PRINTLN(WiFi.localIP());
 }
 
 bool wifi_is_connected()
@@ -80,29 +81,29 @@ void mqtt_initialization()
 {
     client.setServer(MQTT_BROKER_IP, MQTT_BROKER_PORT);
 
-    // Serial.print("Connecting to broker..");
+    DEBUG_PRINT("Connecting to broker..");
 
     if (client.connect(MQTT_NAME, MQTT_UNAME, MQTT_PAS))
     {
-        // Serial.print("Connection successful.\n");
+        DEBUG_PRINT("Connection successful.\n");
 
         client.publish(BOILER_MQTT_STATE_TOPIC, BOILER_MQTT_PAYLOAD_OFF);
-        // Serial.print("Subscribing..");
+        DEBUG_PRINT("Subscribing..");
 
         if (client.subscribe(BOILER_MQTT_COMMAND_TOPIC))
         {
-            // Serial.print("Subscribe successful.\n");
+            DEBUG_PRINT("Subscribe successful.\n");
             client.setCallback(mqtt_cb);
         }
         else
         {
-            // Serial.print("Subscribing failed. \n");
+            DEBUG_PRINT("Subscribing failed. \n");
             restart_chip();
         }
     }
     else
     {
-        // Serial.print("Connection failed.\n");
+        DEBUG_PRINT("Connection failed.\n");
         restart_chip();
     }
 }

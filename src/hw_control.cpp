@@ -1,5 +1,6 @@
 #include <Esp.h>
 #include "hw_control.h"
+#include "helper.h"
 
 #define BUILDIN_LED_ON (LOW)
 #define BUILDIN_LED_OFF (HIGH)
@@ -30,7 +31,7 @@ void pin_initialization()
 
 void restart_chip()
 {
-    // Serial.print("Restarting...");
+    DEBUG_PRINT("Restarting...");
     ESP.restart();
 }
 
