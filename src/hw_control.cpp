@@ -1,4 +1,12 @@
-#include "led.h"
+#include <Esp.h>
+#include "hw_control.h"
+
+#define BUILDIN_LED_ON (LOW)
+#define BUILDIN_LED_OFF (HIGH)
+#define BOILER_ON (HIGH)
+#define BOILER_OFF (LOW)
+
+#define RELAY_PIN (14)
 
 static unsigned long prv_millisec = 0;
 static const long interval_ten_seconds = 10000;
@@ -10,6 +18,20 @@ static void toggle_led(uint8_t pin)
     int pin_states = digitalRead(pin);
     pin_states = (pin_states == HIGH)? LOW : HIGH;
     digitalWrite(pin, pin_states);
+}
+
+void pin_initialization()
+{
+    pinMode(LED_BUILTIN, OUTPUT);
+    digitalWrite(LED_BUILTIN, BUILDIN_LED_OFF);
+    pinMode(RELAY_PIN, OUTPUT);
+    digitalWrite(RELAY_PIN, BOILER_OFF);
+}
+
+void restart_chip()
+{
+    Serial.print("Restarting...");
+    ESP.restart();
 }
 
 void normal_led_blinking(uint8_t pin, unsigned long cur_milli)
@@ -35,4 +57,14 @@ void one_second_led_blinking(uint8_t pin, unsigned long cur_milli)
 
         toggle_led(pin);
     }
+}
+
+void boiler_on()
+{
+    digitalWrite(RELAY_PIN, BOILER_ON);
+}
+
+void boiler_off()
+{
+    digitalWrite(RELAY_PIN, BOILER_OFF);
 }
