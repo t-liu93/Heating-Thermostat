@@ -1,3 +1,6 @@
 [submodule "extern/pubsubclient"]
 	path = extern/pubsubclient
 	url = https://github.com/knolleary/pubsubclient.git
+[submodule "extern/Esp8266-Arduino-Makefile"]
+	path = extern/Esp8266-Arduino-Makefile
+	url = https://github.com/thunderace/Esp8266-Arduino-Makefile.git
