@@ -12,12 +12,25 @@
 #define WIFI_PASSWORD ""
 #endif
 
-#define MQTT_BROKER_IP ("10.238.75.62")
-#define MQTT_BROKER_PORT (1883)
+#ifndef MQTT_BROKER_IP
+#define MQTT_BROKER_IP ""
+#endif
 
-#define MQTT_NAME ("ESP8266 Boiler")
-#define MQTT_UNAME ("mqtt")
-#define MQTT_PAS ("mqtt")
+#ifndef MQTT_BROKER_PORT
+#define MQTT_BROKER_PORT (1883)
+#endif
+
+#ifndef MQTT_NAME
+#define MQTT_NAME ""
+#endif
+
+#ifndef MQTT_UNAME
+#define MQTT_UNAME ""
+#endif
+
+#ifndef MQTT_PAS
+#define MQTT_PAS ""
+#endif
 
 #define BOILER_MQTT_STATE_TOPIC ("switch/boiler/state")
 #define BOILER_MQTT_COMMAND_TOPIC ("switch/boiler/command")
