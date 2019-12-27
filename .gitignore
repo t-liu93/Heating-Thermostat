@@ -33,3 +33,6 @@
 
 # VSCode settings
 .vscode/*
+
+# All build related folders
+build*/*
