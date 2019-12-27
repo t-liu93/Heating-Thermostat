@@ -1,5 +1,5 @@
-#ifndef __SRC_HW_CONTROL_H
-#define __SRC_HW_CONTROL_H
+#ifndef __LIBRARIES_HAL_GPIO_H
+#define __LIBRARIES_HAL_GPIO_H
 
 #include <Arduino.h>
 

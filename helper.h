@@ -1,5 +1,5 @@
-#ifndef __SRC_HELPER_H
-#define __SRC_HELPER_H
+#ifndef __HELPER_H
+#define __HELPER_H
 
 #ifdef DEBUG_BUILD
 #define DEBUG_PRINT(arg)    (Serial.print(arg))
