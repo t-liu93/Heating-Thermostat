@@ -1,4 +1,4 @@
-#include "hw_control.h"
+#include "gpio_control.h"
 #include "communication.h"
 
 void setup()
@@ -17,5 +17,5 @@ void loop()
     else
         one_second_led_blinking(LED_BUILTIN, cur_millisec);
 
-    // mqtt_poll();
+    mqtt_poll();
 }
