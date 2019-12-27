@@ -1,5 +1,5 @@
-#include "src/hw_control.h"
-#include "src/communication.h"
+#include "hw_control.h"
+#include "communication.h"
 
 void setup()
 {
