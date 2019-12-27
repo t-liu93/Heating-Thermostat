@@ -2,16 +2,18 @@
 #include "hw_control.h"
 #include "helper.h"
 
-#define BUILDIN_LED_ON (LOW)
-#define BUILDIN_LED_OFF (HIGH)
-#define BOILER_ON (HIGH)
-#define BOILER_OFF (LOW)
+#define BUILDIN_LED_ON    (LOW)
+#define BUILDIN_LED_OFF   (HIGH)
+#define BOILER_ON         (HIGH)
+#define BOILER_OFF        (LOW)
 
-#define RELAY_PIN (14)
+#define RELAY_PIN         (14)
+#define BUILD_IN_LED_RED  (0)
+#define BUILD_IN_LED_BLUE (2)
 
-static unsigned long prv_millisec = 0;
-static const long interval_ten_seconds = 10000;
-static const long interval_one_second = 1000;
+static unsigned long prv_millisec                   = 0;
+static const long interval_ten_seconds              = 10000;
+static const long interval_one_second               = 1000;
 static const long interval_two_hundred_milliseconds = 200;
 
 static void toggle_led(uint8_t pin)
@@ -23,8 +25,8 @@ static void toggle_led(uint8_t pin)
 
 void pin_initialization()
 {
-    pinMode(LED_BUILTIN, OUTPUT);
-    digitalWrite(LED_BUILTIN, BUILDIN_LED_OFF);
+    pinMode(BUILD_IN_LED_BLUE, OUTPUT);
+    digitalWrite(BUILD_IN_LED_BLUE, BUILDIN_LED_OFF);
     pinMode(RELAY_PIN, OUTPUT);
     digitalWrite(RELAY_PIN, BOILER_OFF);
 }

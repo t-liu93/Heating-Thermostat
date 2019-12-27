@@ -5,7 +5,7 @@ void setup()
 {
     wifi_initialization();
     pin_initialization();
-    // mqtt_initialization();
+    mqtt_initialization();
 }
 
 void loop()
