@@ -6,7 +6,6 @@ GLOBAL_USER_LIBDIR = $(PROJECT_DIR)/extern
 
 USER_LIBS += pubsubclient hal
 
-
 include extern/Esp8266-Arduino-Makefile/espXArduino.mk
 
 prepare:

@@ -5,7 +5,7 @@ void setup()
 {
     wifi_initialization();
     pin_initialization();
-    mqtt_initialization();
+    // mqtt_initialization();
 }
 
 void loop()
@@ -17,5 +17,5 @@ void loop()
     else
         one_second_led_blinking(LED_BUILTIN, cur_millisec);
 
-    mqtt_poll();
+    // mqtt_poll();
 }

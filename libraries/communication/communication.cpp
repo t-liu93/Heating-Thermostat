@@ -4,8 +4,13 @@
 #include "hw_control.h"
 #include "helper.h"
 
-#define WIFI_SSID ("Home")
-#define WIFI_PASSWORD ("ireallydontknow")
+#ifndef WIFI_SSID
+#define WIFI_SSID ""
+#endif
+
+#ifndef WIFI_PASSWORD
+#define WIFI_PASSWORD ""
+#endif
 
 #define MQTT_BROKER_IP ("10.238.75.62")
 #define MQTT_BROKER_PORT (1883)
@@ -59,6 +64,8 @@ void wifi_initialization()
     DEBUG_PRINTLN();
 
     WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+    DEBUG_PRINT(WIFI_SSID);
+    DEBUG_PRINT(WIFI_PASSWORD);
 
     DEBUG_PRINT("Connecting");
     while (WiFi.status() != WL_CONNECTED)
