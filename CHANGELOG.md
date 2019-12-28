@@ -2,6 +2,5 @@
 Initial release, with basic functionality:
 * MQTT subscribe and publish
 * Relay control
-
 ## Known issues
 * WiFi and MQTT information and credentials are hard coded in code.
