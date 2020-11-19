@@ -36,3 +36,7 @@
 
 # All build related folders
 build*/*
+
+pcbdesign/Gerber/*
+*.sch-bak
+*.kicad_pcb-bak
