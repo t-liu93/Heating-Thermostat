@@ -1,0 +1,3 @@
+[submodule "software/lib/ESP8266-Arduino-OTA"]
+	path = software/lib/ESP8266-Arduino-OTA
+	url = git@github.com:t-liu93/ESP8266-Arduino-OTA.git
