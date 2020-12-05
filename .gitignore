@@ -40,3 +40,6 @@ build*/*
 pcbdesign/Gerber/*
 *.sch-bak
 *.kicad_pcb-bak
+
+**/.pio/*
+**/.gitignore
