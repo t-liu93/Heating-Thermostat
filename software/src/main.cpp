@@ -3,23 +3,22 @@
 #include <TaskScheduler.h>
 
 #include "esp8266ota.h"
+#include "boiler/boiler.h"
 
 constexpr uint8_t PIN_HEATER = 14;
 constexpr uint8_t PIN_TOGGLE = 13;
 constexpr uint8_t PIN_STATUS = 12;
 
 constexpr uint32_t PWM_TICKS = 5000;
+constexpr int debounceDelay = 20;
 
-volatile int dutyCycle = 0;
 volatile int state = 0;
-volatile uint8_t status = 0;
 volatile int buttonState = 0;
 volatile long lastDebounceTime;
 
-constexpr int debounceDelay = 20;
-
 WiFiManager *wifiManager = nullptr;
 Esp8266OTA *updater = nullptr;
+Boiler *boiler = nullptr;
 Scheduler *ts;
 Task *updaterTask;
 
@@ -29,14 +28,14 @@ void updaterTick();
 void ICACHE_RAM_ATTR pwmStatusLight()
 {
     uint32_t nextTime = PWM_TICKS;
-    if (dutyCycle == 0)
+    if (Boiler::dutyCycle == 0)
     {
         state = 0;
         digitalWrite(PIN_STATUS, state);
         timer1_write(PWM_TICKS);
         return;
     }
-    if (dutyCycle == 100)
+    if (Boiler::dutyCycle == 100)
     {
         state = 1;
         digitalWrite(PIN_STATUS, state);
@@ -45,12 +44,12 @@ void ICACHE_RAM_ATTR pwmStatusLight()
     }
     if (state == 1)
     {
-        nextTime = (PWM_TICKS / 100 * (100 - dutyCycle));
+        nextTime = (PWM_TICKS / 100 * (100 - Boiler::dutyCycle));
         state = 0;
     }
     else
     {
-        nextTime = (PWM_TICKS / 100 * (dutyCycle));
+        nextTime = (PWM_TICKS / 100 * (Boiler::dutyCycle));
         state = 1;
     }
     digitalWrite(PIN_STATUS, state);
@@ -74,23 +73,24 @@ void ICACHE_RAM_ATTR buttonISR()
     buttonState = reading;
 
     if (reading == 0) return;
-    if (status == 0)
+    if (Boiler::status == 0)
     {
         digitalWrite(PIN_HEATER, 1);
-        dutyCycle = 5;
-        status = 1;
+        Boiler::dutyCycle = 5;
+        Boiler::status = 1;
     }
     else
     {
         digitalWrite(PIN_HEATER, 0);
-        dutyCycle = 0;
-        status = 0;
+        Boiler::dutyCycle = 0;
+        Boiler::status = 0;
     }
 }
 
 void setup()
 {
     Serial.begin(115200);
+    boiler = new Boiler();
     pinMode(PIN_HEATER, OUTPUT);
     pinMode(PIN_STATUS, OUTPUT);
     digitalWrite(PIN_HEATER, 0);
