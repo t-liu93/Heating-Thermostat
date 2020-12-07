@@ -4,10 +4,10 @@
 
 #include "esp8266ota.h"
 #include "boiler/boiler.h"
+#include "communication/mqtt.h"
 
-constexpr uint8_t PIN_HEATER = 14;
-constexpr uint8_t PIN_TOGGLE = 13;
 constexpr uint8_t PIN_STATUS = 12;
+constexpr uint8_t PIN_TOGGLE = 13;
 
 constexpr uint32_t PWM_TICKS = 5000;
 constexpr int debounceDelay = 20;
@@ -18,12 +18,15 @@ volatile long lastDebounceTime;
 
 WiFiManager *wifiManager = nullptr;
 Esp8266OTA *updater = nullptr;
-Boiler *boiler = nullptr;
 Scheduler *ts;
 Task *updaterTask;
+Task *mqttTask;
+Task *mqttCheckConnectionTask;
 
 void WifiInitialization();
 void updaterTick();
+void mqttTick();
+void mqttCheckConnectionTick();
 
 void ICACHE_RAM_ATTR pwmStatusLight()
 {
@@ -75,25 +78,20 @@ void ICACHE_RAM_ATTR buttonISR()
     if (reading == 0) return;
     if (Boiler::status == 0)
     {
-        digitalWrite(PIN_HEATER, 1);
-        Boiler::dutyCycle = 5;
-        Boiler::status = 1;
+        Boiler::on();
     }
     else
     {
-        digitalWrite(PIN_HEATER, 0);
-        Boiler::dutyCycle = 0;
-        Boiler::status = 0;
+        Boiler::off();
     }
 }
 
 void setup()
 {
     Serial.begin(115200);
-    boiler = new Boiler();
-    pinMode(PIN_HEATER, OUTPUT);
+    pinMode(Boiler::pinHeater, OUTPUT);
     pinMode(PIN_STATUS, OUTPUT);
-    digitalWrite(PIN_HEATER, 0);
+    digitalWrite(Boiler::pinHeater, 0);
     digitalWrite(PIN_STATUS, 0);
     timer1_attachInterrupt(&pwmStatusLight);
     timer1_enable(TIM_DIV16, TIM_EDGE, TIM_SINGLE);
@@ -104,10 +102,23 @@ void setup()
     updater = new Esp8266OTA("esp", "password");
     ts = new Scheduler();
     updaterTask = new Task(TASK_MILLISECOND, TASK_FOREVER, updaterTick, ts, true, nullptr, nullptr);
+    mqttTask = new Task(TASK_MILLISECOND, TASK_FOREVER, mqttTick, ts, true, nullptr, nullptr);
+    mqttCheckConnectionTask = new Task(TASK_MINUTE, TASK_FOREVER, mqttCheckConnectionTick, ts, true, nullptr, nullptr);
+    MQTT::connect();
 }
 void loop()
 {
     ts->execute();
+}
+
+void mqttCheckConnectionTick()
+{
+    MQTT::checkConnection();
+}
+
+void mqttTick()
+{
+    MQTT::client.loop();
 }
 
 void updaterTick()
