@@ -22,11 +22,13 @@ Scheduler *ts;
 Task *updaterTask;
 Task *mqttTask;
 Task *mqttCheckConnectionTask;
+Task *pidTask;
 
 void WifiInitialization();
 void updaterTick();
 void mqttTick();
 void mqttCheckConnectionTick();
+void pidTick();
 
 void ICACHE_RAM_ATTR pwmStatusLight()
 {
@@ -104,11 +106,17 @@ void setup()
     updaterTask = new Task(TASK_MILLISECOND, TASK_FOREVER, updaterTick, ts, true, nullptr, nullptr);
     mqttTask = new Task(TASK_MILLISECOND, TASK_FOREVER, mqttTick, ts, true, nullptr, nullptr);
     mqttCheckConnectionTask = new Task(TASK_MINUTE, TASK_FOREVER, mqttCheckConnectionTick, ts, true, nullptr, nullptr);
+    pidTask = new Task(10 * TASK_MINUTE, TASK_FOREVER, pidTick, ts, true, nullptr, nullptr);
     MQTT::connect();
 }
 void loop()
 {
     ts->execute();
+}
+
+void pidTick()
+{
+
 }
 
 void mqttCheckConnectionTick()

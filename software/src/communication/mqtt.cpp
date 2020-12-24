@@ -43,6 +43,7 @@ void MQTT::connect(String brokerIp, uint16_t brokerPort, String brokerUserName, 
     MQTT::uName = brokerUserName;
     MQTT::pass = brokerPass;
     MQTT::client.setServer(MQTT::ip.c_str(), MQTT::port);
+    MQTT::client.setKeepAlive(10);
     if (MQTT::client.connect("Heating Thermostat", MQTT::uName.c_str(), MQTT::pass.c_str()))
     {
         client.publish(STATE_TOPIC, PAYLOAD_OFF);
